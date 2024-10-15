@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         val testValues = ContentValues().apply{
             put("entry_id", 4)
             put("prompt_id", "tst1")
-            put("prompt", "This is a test journal prompt")
-            put("entry", "i have changed what i'm writing about a 2nd time.")
+            put("prompt", "What's a good meal you've had recently?")
+            put("entry", "this is the entry before I write stuff.")
             put("datetime", System.currentTimeMillis())
         }
 
@@ -49,10 +49,10 @@ class MainActivity : AppCompatActivity() {
         entryDb.insert("user_entries", null, testValues)
         entryDb.insert("user_entries", null, testValues2)
 
-        setTestText(dbHelper.getElementById(4, "entry"))
+        setCurrentPrompt(dbHelper.getElementById(4, "prompt"))
     }
 
-    private fun setTestText(inputString: String?) {
+    private fun setCurrentPrompt(inputString: String?) {
         //setContentView(R.layout.textview_test)
         val textViewTest: TextView = findViewById<TextView>(R.id.textview_test)
 

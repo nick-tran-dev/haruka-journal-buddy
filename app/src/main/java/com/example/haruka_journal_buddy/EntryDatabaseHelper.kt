@@ -50,6 +50,17 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         return result
     }
 
+    fun updateById(id: Int, elementChoose: String, inputElement: String?){
+        if (elementChoose !in listOf("prompt", "entry", "datetime")) {return}
+
+        this.readableDatabase.execSQL(
+            "UPDATE user_entries SET "
+            + elementChoose + " = " + inputElement
+            + " WHERE id = " + id
+        )
+
+    }
+
     companion object {
         const val DATABASE_NAME = "user_entries.db"
         const val DATABASE_VERSION = 1

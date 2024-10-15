@@ -11,10 +11,32 @@
         android:id="@+id/textview_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="prompt here"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.06" />
+
+    <EditText
+        android:id="@+id/custom_edit_text"
+        android:layout_width="412dp"
+        android:layout_height="420dp"
+        android:background="@android:color/transparent"
+        android:gravity="top|start"
+        android:hint="What's on your mind?"
+        android:inputType="textMultiLine"
+        android:lineSpacingExtra="2dp"
+        android:maxLines="10"
+        android:overScrollMode="always"
+        android:padding="16dp"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.242" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
