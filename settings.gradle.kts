@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "haruka_prototype"
+rootProject.name = "haruka_journal_buddy"
 include(":app")
  

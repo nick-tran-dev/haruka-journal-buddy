@@ -1,4 +1,4 @@
-package com.example.haruka_prototype
+package com.example.haruka_journal_buddy
 
 import org.junit.Test
 
