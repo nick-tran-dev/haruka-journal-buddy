@@ -1,0 +1,1 @@
+# haruka-journal-buddy
