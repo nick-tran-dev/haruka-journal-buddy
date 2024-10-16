@@ -55,8 +55,9 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
         this.readableDatabase.execSQL(
             "UPDATE user_entries SET "
-            + elementChoose + " = " + inputElement
-            + " WHERE id = " + id
+            + elementChoose + " = "
+            + "\"" + inputElement + "\""
+            + " WHERE entry_id = " + id
         )
 
     }
