@@ -33,12 +33,8 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     fun getElementById(id: Int, elementChoose: String): String?{
         if (elementChoose !in listOf("prompt", "entry", "datetime")) {return "ERROR: Invalid SELECT query"}
 
-        val db = this.readableDatabase
-
-        val cursor : Cursor = db.rawQuery(
-            "SELECT "
-                + elementChoose
-                + " FROM user_entries WHERE entry_id = ?"
+        val cursor : Cursor = this.readableDatabase.rawQuery(
+            "SELECT $elementChoose FROM user_entries WHERE entry_id = ?"
             ,arrayOf(id.toString())
         )
 
@@ -55,10 +51,8 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         if (elementChoose !in listOf("prompt", "entry", "datetime")) {return}
 
         this.readableDatabase.execSQL(
-            "UPDATE user_entries SET "
-            + elementChoose + " = "
-            + "\"" + inputElement + "\""
-            + " WHERE entry_id = " + id
+            "UPDATE user_entries SET $elementChoose = ? WHERE entry_id = ?"
+            ,arrayOf(inputElement, id)
         )
     }
 
