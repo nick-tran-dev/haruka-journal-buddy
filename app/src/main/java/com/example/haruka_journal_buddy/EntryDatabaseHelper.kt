@@ -35,7 +35,8 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
         val db = this.readableDatabase
 
-        val cursor : Cursor = db.rawQuery("SELECT "
+        val cursor : Cursor = db.rawQuery(
+            "SELECT "
                 + elementChoose
                 + " FROM user_entries WHERE entry_id = ?"
             ,arrayOf(id.toString())
@@ -59,7 +60,26 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             + "\"" + inputElement + "\""
             + " WHERE entry_id = " + id
         )
+    }
 
+    fun checkPrompt(promptId : String, inputPrompt : String) : Boolean {
+        val db = this.readableDatabase
+
+        val cursor : Cursor = db.rawQuery(
+            "SELECT prompt_id, prompt FROM user_entries WHERE prompt_id = ?"
+            ,arrayOf(promptId)
+        )
+
+        if (cursor.count == 0){
+            db.execSQL(
+                "INSERT INTO user_entries (prompt_id, prompt, datetime) VALUES (?, ?, ?)"
+                ,arrayOf(promptId, inputPrompt, System.currentTimeMillis())
+            )
+            return false
+        }
+
+        cursor.close()
+        return true
     }
 
     companion object {

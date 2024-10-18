@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         /*
         * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
         * */
-        dbHelper.WIPEDATABASE()
+       dbHelper.WIPEDATABASE()
 
         val entryDb = dbHelper.writableDatabase
         val entryBody = findViewById<EditText>(R.id.entry_body)
@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
-
 
 
         val testValues = ContentValues().apply{
@@ -67,6 +66,8 @@ class MainActivity : AppCompatActivity() {
 
         setCurrentPrompt(dbHelper.getElementById(4, "prompt"))
         entryBody.setText(dbHelper.getElementById(4, "entry"))
+
+        dbHelper.checkPrompt("tst_new", "this is my insertion prompt")
     }
 
     private fun setCurrentPrompt(inputString: String?) {
