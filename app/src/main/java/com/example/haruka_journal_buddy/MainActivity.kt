@@ -2,15 +2,20 @@ package com.example.haruka_journal_buddy
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.service.autofill.UserData
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.haruka_journal_buddy.R
+import kotlinx.coroutines.launch
+
 //import com.example.haruka_prototype.R
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
         * */
        dbHelper.WIPEDATABASE()
+        /*
+        *
+        * */
 
         val entryDb = dbHelper.writableDatabase
         val entryBody = findViewById<EditText>(R.id.entry_body)
@@ -68,6 +76,14 @@ class MainActivity : AppCompatActivity() {
         entryBody.setText(dbHelper.getElementById(4, "entry"))
 
         dbHelper.checkPrompt("tst_new", "this is my insertion prompt")
+
+        lifecycleScope.launch{
+            UserDataSingleton.changeValue(this@MainActivity, UserDataSingleton.USER_ID, "nick_id123")
+            Log.d(
+                "USER_ID log:",
+                UserDataSingleton.getValue(this@MainActivity, UserDataSingleton.USER_ID)!!
+            )
+        }
     }
 
     private fun setCurrentPrompt(inputString: String?) {
