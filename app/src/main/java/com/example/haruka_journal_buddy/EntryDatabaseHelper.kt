@@ -5,6 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 import android.database.Cursor
+import android.icu.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -14,7 +17,8 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                 ",prompt_id TEXT NOT NULL" +
                 ",prompt TEXT" +
                 ",entry TEXT" +
-                ",datetime DATETIME" +
+                ",datetime_created DATETIME" +
+                ",datetime_last_modified DATETIME" +
             ")"
         )
     }
@@ -80,8 +84,8 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             return
 
         this.readableDatabase.execSQL(
-            "UPDATE user_entries SET $elementChoose = ? WHERE entry_id = ?"
-            ,arrayOf(inputElement, id)
+            "UPDATE user_entries SET $elementChoose = ?, datetime_last_modified = ? WHERE entry_id = ?"
+            ,arrayOf(inputElement, now(), id)
         )
     }
 
@@ -105,6 +109,9 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         return true
     }
 
+    private fun now(): String{
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+    }
 
     companion object {
         const val DATABASE_NAME = "user_entries.db"

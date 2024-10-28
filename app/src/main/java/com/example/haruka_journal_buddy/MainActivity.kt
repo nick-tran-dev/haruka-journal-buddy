@@ -1,9 +1,7 @@
 package com.example.haruka_journal_buddy
 
 import android.content.ContentValues
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.service.autofill.UserData
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,12 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.lifecycleScope
-import com.example.haruka_journal_buddy.R
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-
 //import com.example.haruka_prototype.R
 
 // pc git test
@@ -53,7 +45,8 @@ class MainActivity : AppCompatActivity() {
             put("prompt_id", "tst1")
             put("prompt", "What's a good meal you've had recently?")
             put("entry", "this is the entry before I write stuff.")
-            put("datetime", System.currentTimeMillis())
+            put("datetime_created", "2024-10-28 11:42:07")
+            put("datetime_last_modified", "2024-10-28 11:42:07")
         }
 
         val testValues2 = ContentValues().apply{
@@ -61,7 +54,8 @@ class MainActivity : AppCompatActivity() {
             put("prompt_id", "tst2")
             put("prompt", "My SECOND test prompt")
             put("entry", "today, I had raising canes. it was yummy.")
-            put("datetime", System.currentTimeMillis())
+            put("datetime_created", "2024-10-28 11:42:07")
+            put("datetime_last_modified", "2024-10-28 11:42:07")
         }
 
         entryDb.insert("user_entries", null, testValues)
