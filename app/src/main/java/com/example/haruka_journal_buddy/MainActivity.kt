@@ -21,6 +21,8 @@ import kotlinx.coroutines.launch
 
 //import com.example.haruka_prototype.R
 
+// pc git test
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
