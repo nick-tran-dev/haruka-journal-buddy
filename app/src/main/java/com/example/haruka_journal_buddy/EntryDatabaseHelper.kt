@@ -9,14 +9,14 @@ import android.database.Cursor
 class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val SQL_CREATE_ENTRIES = "CREATE TABLE IF NOT EXISTS user_entries (" +
+        db?.execSQL("CREATE TABLE IF NOT EXISTS user_entries (" +
                 "entry_id INTEGER PRIMARY KEY" +
                 ",prompt_id TEXT NOT NULL" +
                 ",prompt TEXT" +
                 ",entry TEXT" +
                 ",datetime DATETIME" +
-                ")"
-        db?.execSQL(SQL_CREATE_ENTRIES)
+            ")"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int){
@@ -30,25 +30,54 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         onCreate(db)
     }
 
-    fun getElementById(id: Int, elementChoose: String): String?{
-        if (elementChoose !in listOf("prompt", "entry", "datetime")) {return "ERROR: Invalid SELECT query"}
+    fun selectStrFromDb(queryType: String, id: Any?,column: String?): String?{
+        if (queryType == "element_by_prompt_id" && column !in listOf("prompt", "entry", "datetime"))
+            return null
 
-        val cursor : Cursor = this.readableDatabase.rawQuery(
-            "SELECT $elementChoose FROM user_entries WHERE entry_id = ?"
-            ,arrayOf(id.toString())
-        )
+        val cursor : Cursor? = when(queryType){
+            "element_by_prompt_id" -> this.readableDatabase.rawQuery(
+                "SELECT $column FROM user_entries WHERE entry_id = ?"
+                ,arrayOf(id.toString())
+            )
+            "entry_by_prompt_id" -> this.readableDatabase.rawQuery(
+                "SELECT entry_id FROM user_entries WHERE prompt_id = ?"
+                ,arrayOf(id.toString())
+            )
+            else -> null
+        }
 
-        var result: String? = null
+        val result = if (cursor != null && cursor.moveToFirst())
+            cursor.getString(cursor.getColumnIndexOrThrow(column))
+        else
+            null
 
-        if (cursor.moveToFirst())
-            result = cursor.getString(cursor.getColumnIndexOrThrow(elementChoose))
+        cursor?.close()
+        return result
+    }
 
-        cursor.close()
+    fun selectIntFromDb(queryType: String, id: Any?,column: String?): Int?{
+        val cursor : Cursor? = when(queryType){
+            "top_entry" -> this.readableDatabase.rawQuery(
+                "SELECT MAX(entry_id) AS 'max_entry_id' FROM user_entries"
+                ,null
+            )
+            else -> null
+        }
+
+        val result : Int?
+
+        if (cursor != null && cursor.moveToFirst())
+           result = cursor.getInt(cursor.getColumnIndexOrThrow(column))
+        else
+            result = null
+
+        cursor?.close()
         return result
     }
 
     fun updateById(id: Int, elementChoose: String, inputElement: String?){
-        if (elementChoose !in listOf("prompt", "entry", "datetime")) {return}
+        if (elementChoose !in listOf("prompt", "entry", "datetime"))
+            return
 
         this.readableDatabase.execSQL(
             "UPDATE user_entries SET $elementChoose = ? WHERE entry_id = ?"
@@ -75,6 +104,7 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         cursor.close()
         return true
     }
+
 
     companion object {
         const val DATABASE_NAME = "user_entries.db"

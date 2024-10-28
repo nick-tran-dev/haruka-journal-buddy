@@ -1,6 +1,7 @@
 package com.example.haruka_journal_buddy
 
 import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.service.autofill.UserData
 import android.text.Editable
@@ -15,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import com.example.haruka_journal_buddy.R
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 //import com.example.haruka_prototype.R
@@ -63,41 +65,31 @@ class MainActivity : AppCompatActivity() {
         entryDb.insert("user_entries", null, testValues)
         entryDb.insert("user_entries", null, testValues2)
 
-        var currentEntry = setCurrentEntry()
+        var currentEntry : Int? = dbHelper.selectIntFromDb("top_entry", null, "max_entry_id")
+
+        Log.d(currentEntry.toString(), "currentEntry main")
 
         entryBody.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                dbHelper.updateById(currentEntry, "entry", entryBody.text.toString())
+                dbHelper.updateById(
+                    currentEntry ?: 1, "entry", entryBody.text.toString()
+                )
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        setCurrentPrompt(
+            dbHelper.selectStrFromDb("element_by_prompt_id", currentEntry, "prompt")
+        )
+        entryBody.setText(
+            dbHelper.selectStrFromDb("element_by_prompt_id", currentEntry, "entry")
+        )
 
-        setCurrentPrompt(dbHelper.getElementById(currentEntry, "prompt"))
-        entryBody.setText(dbHelper.getElementById(currentEntry, "entry"))
-
-        dbHelper.checkPrompt("tst_new", "this is my insertion prompt")
+        //dbHelper.checkPrompt("tst_new", "this is my insertion prompt")
 
 
-    }
-
-    private fun setCurrentEntry() : Int {
-        var currentEntry : Int = -1
-
-        lifecycleScope.launch{
-            currentEntry =
-                getDailyPrompt()
-                    ?: UserDataSingleton.getValue(this@MainActivity, UserDataSingleton.LAST_ENTRY)
-                    ?: currentEntry
-        }
-
-        return currentEntry
-    }
-
-    private fun getDailyPrompt() : Int? {
-        return 10 // insert later
     }
 
     private fun setCurrentPrompt(inputString: String?) {
