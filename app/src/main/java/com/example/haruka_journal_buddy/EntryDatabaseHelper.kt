@@ -34,7 +34,7 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         onCreate(db)
     }
 
-    fun selectStrFromDb(queryType: String, id: Any?,column: String?): String?{
+    fun selectStrFromDb(queryType: String, id: Any?, column: String?): String?{
         if (queryType == "element_by_prompt_id" && column !in listOf("prompt", "entry", "datetime"))
             return null
 
@@ -59,7 +59,7 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         return result
     }
 
-    fun selectIntFromDb(queryType: String, id: Any?,column: String?): Int?{
+    fun selectIntFromDb(queryType: String, id: Any?, column: String?): Int?{
         val cursor : Cursor? = when(queryType){
             "top_entry" -> this.readableDatabase.rawQuery(
                 "SELECT MAX(entry_id) AS 'max_entry_id' FROM user_entries"
