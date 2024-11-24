@@ -13,6 +13,7 @@ class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapt
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val titleImage: ShapeableImageView = itemView.findViewById(R.id.title_image)
         val titleHeader: TextView = itemView.findViewById(R.id.title_header)
+        val titleDesc: TextView = itemView.findViewById(R.id.title_desc)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,6 +36,7 @@ class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapt
         val currentItem = itemList[position]
         viewHolder.titleImage.setImageResource(currentItem.titleImage)
         viewHolder.titleHeader.text = currentItem.heading
+        viewHolder.titleDesc.text = currentItem.desc
     }
 
     // Return the size of your dataset (invoked by the layout manager)

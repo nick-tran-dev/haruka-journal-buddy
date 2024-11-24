@@ -10,6 +10,7 @@ import java.util.Date
 import java.util.Locale
 
 class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    val selectAll: String = "SELECT * FROM user_entries"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE IF NOT EXISTS user_entries (" +
@@ -107,6 +108,24 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
         cursor.close()
         return true
+    }
+
+    fun getSelectResults(inputQuery: String): List<Map<String, Any?>>{
+        val result = mutableListOf<Map<String, Any?>>()
+        val cursor = this.readableDatabase.rawQuery(inputQuery, null)
+
+        cursor.use{if(cursor.moveToFirst()){
+            do{
+                val tuple = mutableMapOf<String, Any?>()
+
+                for (columnIndex in 0 until cursor.columnCount)
+                    tuple[cursor.getColumnName(columnIndex)] = cursor.getString(columnIndex)
+
+                result.add(tuple)
+            } while (cursor.moveToNext())
+        }}
+
+        return result
     }
 
     private fun now(): String{

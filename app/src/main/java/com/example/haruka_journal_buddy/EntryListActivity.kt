@@ -12,8 +12,12 @@ class EntryListActivity : AppCompatActivity() {
 
     private lateinit var promptRecyclerView: RecyclerView
     private lateinit var testList: ArrayList<SavedEntry>
-    lateinit var imageIds: Array<Int>
-    lateinit var headings: Array<String>
+    //lateinit var imageIds: Array<Int>
+    //lateinit var headings: Array<String>
+    //lateinit var descs: Array<String>
+    lateinit var imageIds: MutableList<Int>
+    lateinit var headings: MutableList<String>
+    lateinit var descs: MutableList<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,24 +30,19 @@ class EntryListActivity : AppCompatActivity() {
             insets
         }
 
-        imageIds = arrayOf(
-            R.drawable.test_image1
-            ,R.drawable.test_image1
-        )
+        imageIds = mutableListOf()
+        headings = mutableListOf()
+        descs = mutableListOf()
 
-        headings = arrayOf(
-            "Write about a nice meal you've had recently."
-            ,"Write about a nice meal you've had recently."
-        )
+        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        //val entryDb = dbHelper.writableDatabase
+        val entries = dbHelper.getSelectResults(dbHelper.selectAll)
 
-        /*
-        val testList = arrayListOf("test 1", "test 2", "test 3")
-
-        val recyclerView: RecyclerView = findViewById(R.id.prompt_list)
-        val customAdapter = PromptAdapter(testList)
-        recyclerView.layoutManager = LinearLayoutManager(this@EntryListActivity)
-        recyclerView.adapter = customAdapter
-         */
+        for (entry in entries){
+            imageIds.add(R.drawable.test_image1)
+            headings.add(entry["prompt"].toString())
+            descs.add(entry["entry"].toString())
+        }
 
         promptRecyclerView = findViewById(R.id.prompt_list)
         promptRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -56,7 +55,7 @@ class EntryListActivity : AppCompatActivity() {
 
     private fun getUserEntries(){
         for (i in imageIds.indices){
-            val savedEntry = SavedEntry(imageIds[i], headings[i])
+            val savedEntry = SavedEntry(imageIds[i], headings[i], descs[i])
             testList.add(savedEntry)
         }
         var adapter = PromptAdapter(testList)
