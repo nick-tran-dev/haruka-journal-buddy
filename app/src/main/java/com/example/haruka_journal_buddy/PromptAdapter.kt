@@ -25,13 +25,8 @@ class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapt
 
     private lateinit var promptListener: onItemClickListener
 
-    interface onItemClickListener{
-        fun onItemClick(position: Int)
-    }
-
-    fun setOnItemClickListener(listener: onItemClickListener){
-        promptListener = listener
-    }
+    interface onItemClickListener{ fun onItemClick(position: Int) }
+    fun setOnItemClickListener(listener: onItemClickListener){ promptListener = listener }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

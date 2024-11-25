@@ -1,7 +1,10 @@
 package com.example.haruka_journal_buddy
 
 import android.content.Context
+import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,14 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class EntryListActivity : AppCompatActivity() {
+    private val DESC_MAX = 50
 
     private lateinit var promptRecyclerView: RecyclerView
     private lateinit var entryList: ArrayList<SavedEntry>
+    lateinit var entryIds: MutableList<String>
     lateinit var imageIds: MutableList<Int>
     lateinit var headings: MutableList<String>
     lateinit var descs: MutableList<String>
-
-    private val DESC_MAX = 50
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +33,27 @@ class EntryListActivity : AppCompatActivity() {
             insets
         }
 
+        entryIds = mutableListOf()
         imageIds = mutableListOf()
         headings = mutableListOf()
         descs = mutableListOf()
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
-        //val entryDb = dbHelper.writableDatabase
+        val entryDb = dbHelper.writableDatabase
         val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
 
+        /*
+        * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
+        * */
+        dbHelper.WIPEDATABASE()
+        /*
+        *
+        * */
+
+        testInsert1(entryDb)
+
         for (entry in entries){
-            //imageIds.add(R.drawable.test_image1)
+            entryIds.add(entry["entry_id"].toString())
             addDrawableImage(this, entry["icon_filename"].toString())
             headings.add(entry["prompt"].toString())
             descs.add(
@@ -61,11 +75,18 @@ class EntryListActivity : AppCompatActivity() {
             val savedEntry = SavedEntry(imageIds[i], headings[i], descs[i])
             entryList.add(savedEntry)
         }
-        var adapter = PromptAdapter(entryList)
+
+        val adapter = PromptAdapter(entryList)
         promptRecyclerView.adapter = adapter
+
         adapter.setOnItemClickListener(object : PromptAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-                Toast.makeText(this@EntryListActivity, "clicked on item $position", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@EntryListActivity, "clicked on item $position" + " and id " + entryIds[position], Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this@EntryListActivity, MainActivity::class.java)
+                intent.putExtra("EXTRA_STRING", entryIds[position])
+                Log.d("IntentDebug", "EXTRA_STRING = ${entryIds[position]}")
+                startActivity(intent)
             }
 
         })
@@ -86,5 +107,11 @@ class EntryListActivity : AppCompatActivity() {
             input.substring(0, DESC_MAX).trimEnd() + "..."
         else
             input
+    }
+
+    private fun testInsert1(db : SQLiteDatabase){
+        db.insert("user_entries", null, TestEntries.testValues1)
+        db.insert("user_entries", null, TestEntries.testValues2)
+        db.insert("user_entries", null, TestEntries.testValues3)
     }
 }
