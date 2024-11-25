@@ -35,19 +35,12 @@ class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapt
         )
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        //viewHolder.textView.text = itemList[position]
-
         val currentItem = itemList[position]
         viewHolder.titleImage.setImageResource(currentItem.titleImage)
         viewHolder.titleHeader.text = currentItem.heading
         viewHolder.titleDesc.text = currentItem.desc
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() : Int { return itemList.size }
 }

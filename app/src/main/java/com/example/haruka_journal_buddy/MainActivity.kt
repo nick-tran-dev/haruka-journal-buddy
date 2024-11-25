@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         val currentEntry = passedString?.toIntOrNull()
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
-        //val entryDb = dbHelper.writableDatabase
         val entryBody = findViewById<EditText>(R.id.entry_body)
 
         entryBody.addTextChangedListener(object : TextWatcher{

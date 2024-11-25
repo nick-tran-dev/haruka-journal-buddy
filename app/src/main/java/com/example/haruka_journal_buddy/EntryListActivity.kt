@@ -40,11 +40,10 @@ class EntryListActivity : AppCompatActivity() {
         * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
         * */
         dbHelper.WIPEDATABASE()
+        testInsert1(entryDb)
         /*
         *
         * */
-
-        testInsert1(entryDb)
 
         refreshRecycler()
     }
