@@ -80,5 +80,6 @@ class MainActivity : AppCompatActivity() {
     private fun testInsert1(db : SQLiteDatabase){
         db.insert("user_entries", null, TestEntries.testValues1)
         db.insert("user_entries", null, TestEntries.testValues2)
+        db.insert("user_entries", null, TestEntries.testValues3)
     }
 }

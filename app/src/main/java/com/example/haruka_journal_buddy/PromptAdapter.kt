@@ -10,19 +10,33 @@ import com.google.android.material.imageview.ShapeableImageView
 //class PromptAdapter(private val itemList: List<String>) : RecyclerView.Adapter<PromptAdapter.ViewHolder>()
 
 class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapter<PromptAdapter.ViewHolder>() {
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View, listener: onItemClickListener) : RecyclerView.ViewHolder(itemView){
         val titleImage: ShapeableImageView = itemView.findViewById(R.id.title_image)
         val titleHeader: TextView = itemView.findViewById(R.id.title_header)
         val titleDesc: TextView = itemView.findViewById(R.id.title_desc)
+
+        init{
+            itemView.setOnClickListener {
+                if(bindingAdapterPosition != RecyclerView.NO_POSITION)
+                    listener.onItemClick(bindingAdapterPosition)
+            }
+        }
+    }
+
+    private lateinit var promptListener: onItemClickListener
+
+    interface onItemClickListener{
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(listener: onItemClickListener){
+        promptListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        /*
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_entry_list, parent, false)
-        return ViewHolder(view)
-         */
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.prompt_list_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.prompt_list_item, parent, false),
+            promptListener
         )
     }
 

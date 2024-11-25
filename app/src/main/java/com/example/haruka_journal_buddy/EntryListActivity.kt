@@ -2,6 +2,7 @@ package com.example.haruka_journal_buddy
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,13 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 class EntryListActivity : AppCompatActivity() {
 
     private lateinit var promptRecyclerView: RecyclerView
-    private lateinit var testList: ArrayList<SavedEntry>
+    private lateinit var entryList: ArrayList<SavedEntry>
     lateinit var imageIds: MutableList<Int>
     lateinit var headings: MutableList<String>
     lateinit var descs: MutableList<String>
 
-    private val descMax = 55
-
+    private val DESC_MAX = 50
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class EntryListActivity : AppCompatActivity() {
         promptRecyclerView.layoutManager = LinearLayoutManager(this)
         promptRecyclerView.setHasFixedSize(true)
 
-        testList = arrayListOf<SavedEntry>()
+        entryList = arrayListOf<SavedEntry>()
 
         getUserEntries()
     }
@@ -59,11 +59,17 @@ class EntryListActivity : AppCompatActivity() {
     private fun getUserEntries(){
         for (i in imageIds.indices){
             val savedEntry = SavedEntry(imageIds[i], headings[i], descs[i])
-            testList.add(savedEntry)
+            entryList.add(savedEntry)
         }
-        var adapter = PromptAdapter(testList)
+        var adapter = PromptAdapter(entryList)
         promptRecyclerView.adapter = adapter
-        adapter.notifyDataSetChanged()
+        adapter.setOnItemClickListener(object : PromptAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                Toast.makeText(this@EntryListActivity, "clicked on item $position", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+        //adapter.notifyDataSetChanged()
     }
 
     private fun addDrawableImage(context: Context, drawableName: String){
@@ -76,10 +82,9 @@ class EntryListActivity : AppCompatActivity() {
     }
 
     private fun truncateDesc(input: String): String {
-        return if(input.length > descMax)
-            input.substring(0, descMax) + "..."
+        return if(input.length > DESC_MAX)
+            input.substring(0, DESC_MAX).trimEnd() + "..."
         else
             input
-
     }
 }
