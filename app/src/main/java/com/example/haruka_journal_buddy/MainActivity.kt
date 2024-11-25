@@ -78,25 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun testInsert1(db : SQLiteDatabase){
-        val testValues = ContentValues().apply{
-            put("entry_id", 1)
-            put("prompt_id", "tst1")
-            put("prompt", "What's a good meal you've had recently?")
-            put("entry", "this is the entry before I write stuff.")
-            put("datetime_created", "2024-10-28 11:42:07")
-            put("datetime_last_modified", "2024-10-28 11:42:07")
-        }
-
-        val testValues2 = ContentValues().apply{
-            put("entry_id", 2)
-            put("prompt_id", "tst2")
-            put("prompt", "My SECOND test prompt")
-            put("entry", "today, I had raising canes. it was yummy.")
-            put("datetime_created", "2024-10-28 11:42:07")
-            put("datetime_last_modified", "2024-10-28 11:42:07")
-        }
-
-        db.insert("user_entries", null, testValues)
-        db.insert("user_entries", null, testValues2)
+        db.insert("user_entries", null, TestEntries.testValues1)
+        db.insert("user_entries", null, TestEntries.testValues2)
     }
 }

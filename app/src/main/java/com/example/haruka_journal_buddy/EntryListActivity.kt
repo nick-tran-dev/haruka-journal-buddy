@@ -1,5 +1,6 @@
 package com.example.haruka_journal_buddy
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,12 +13,11 @@ class EntryListActivity : AppCompatActivity() {
 
     private lateinit var promptRecyclerView: RecyclerView
     private lateinit var testList: ArrayList<SavedEntry>
-    //lateinit var imageIds: Array<Int>
-    //lateinit var headings: Array<String>
-    //lateinit var descs: Array<String>
     lateinit var imageIds: MutableList<Int>
     lateinit var headings: MutableList<String>
     lateinit var descs: MutableList<String>
+
+    private val descMax = 55
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +36,15 @@ class EntryListActivity : AppCompatActivity() {
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
         //val entryDb = dbHelper.writableDatabase
-        val entries = dbHelper.getSelectResults(dbHelper.selectAll)
+        val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
 
         for (entry in entries){
-            imageIds.add(R.drawable.test_image1)
+            //imageIds.add(R.drawable.test_image1)
+            addDrawableImage(this, entry["icon_filename"].toString())
             headings.add(entry["prompt"].toString())
-            descs.add(entry["entry"].toString())
+            descs.add(
+                truncateDesc(entry["entry"].toString())
+            )
         }
 
         promptRecyclerView = findViewById(R.id.prompt_list)
@@ -61,5 +64,22 @@ class EntryListActivity : AppCompatActivity() {
         var adapter = PromptAdapter(testList)
         promptRecyclerView.adapter = adapter
         adapter.notifyDataSetChanged()
+    }
+
+    private fun addDrawableImage(context: Context, drawableName: String){
+        val fileId = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
+
+        if (fileId != 0)
+            imageIds.add(fileId)
+        else
+            imageIds.add(R.drawable.failsafe_img)
+    }
+
+    private fun truncateDesc(input: String): String {
+        return if(input.length > descMax)
+            input.substring(0, descMax) + "..."
+        else
+            input
+
     }
 }

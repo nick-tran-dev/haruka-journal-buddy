@@ -11,6 +11,7 @@ import java.util.Locale
 
 class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     val selectAll: String = "SELECT * FROM user_entries"
+    val selectAllModOrdered: String = "SELECT * FROM user_entries ORDER BY datetime_last_modified DESC"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE IF NOT EXISTS user_entries (" +
@@ -18,6 +19,7 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                 ",prompt_id TEXT NOT NULL" +
                 ",prompt TEXT" +
                 ",entry TEXT" +
+                ",icon_filename TEXT" +
                 ",datetime_created DATETIME" +
                 ",datetime_last_modified DATETIME" +
             ")"
