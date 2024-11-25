@@ -27,26 +27,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         val passedString = intent.getStringExtra("EXTRA_STRING")
-        var dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        val currentEntry = passedString?.toIntOrNull()
 
-
-        /*
-        * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
-        * */
-       //dbHelper.WIPEDATABASE()
-        /*
-        *
-        * */
-
-        val entryDb = dbHelper.writableDatabase
+        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        //val entryDb = dbHelper.writableDatabase
         val entryBody = findViewById<EditText>(R.id.entry_body)
-
-        //testInsert1(entryDb)
-
-        //var currentEntry : Int? = dbHelper.selectIntFromDb("top_entry", null, "max_entry_id")
-        var currentEntry = passedString?.toIntOrNull()
-
-        //Log.d(currentEntry.toString(), "currentEntry main")
 
         entryBody.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
@@ -68,23 +53,10 @@ class MainActivity : AppCompatActivity() {
             dbHelper.selectStrFromDb("element_by_prompt_id", currentEntry, "entry")
         )
 
-        //dbHelper.checkPrompt("tst_new", "this is my insertion prompt")
-
-        //startActivity(Intent(this, EntryListActivity::class.java))
     }
 
     private fun setCurrentPrompt(inputString: String?) {
-        //setContentView(R.layout.textview_test)
         val textViewTest: TextView = findViewById<TextView>(R.id.textview_test)
         textViewTest.text = inputString
     }
-
-    /*
-    private fun testInsert1(db : SQLiteDatabase){
-        db.insert("user_entries", null, TestEntries.testValues1)
-        db.insert("user_entries", null, TestEntries.testValues2)
-        db.insert("user_entries", null, TestEntries.testValues3)
-    }
-
-     */
 }

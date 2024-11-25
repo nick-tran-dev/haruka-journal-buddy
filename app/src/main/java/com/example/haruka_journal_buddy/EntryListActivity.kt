@@ -33,14 +33,8 @@ class EntryListActivity : AppCompatActivity() {
             insets
         }
 
-        entryIds = mutableListOf()
-        imageIds = mutableListOf()
-        headings = mutableListOf()
-        descs = mutableListOf()
-
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
         val entryDb = dbHelper.writableDatabase
-        val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
 
         /*
         * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
@@ -51,6 +45,24 @@ class EntryListActivity : AppCompatActivity() {
         * */
 
         testInsert1(entryDb)
+
+        refreshRecycler()
+    }
+
+    override fun onResume(){
+        super.onResume()
+        refreshRecycler()
+    }
+
+    private fun refreshRecycler(){
+        entryIds = mutableListOf()
+        imageIds = mutableListOf()
+        headings = mutableListOf()
+        descs = mutableListOf()
+
+        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        val entryDb = dbHelper.writableDatabase
+        val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
 
         for (entry in entries){
             entryIds.add(entry["entry_id"].toString())
@@ -85,7 +97,6 @@ class EntryListActivity : AppCompatActivity() {
 
                 val intent = Intent(this@EntryListActivity, MainActivity::class.java)
                 intent.putExtra("EXTRA_STRING", entryIds[position])
-                Log.d("IntentDebug", "EXTRA_STRING = ${entryIds[position]}")
                 startActivity(intent)
             }
 
