@@ -92,7 +92,7 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         )
     }
 
-    fun checkPrompt(promptId : String, inputPrompt : String) : Boolean {
+    fun checkPrompt(promptId : String, inputPrompt : String){
         val db = this.readableDatabase
 
         val cursor : Cursor = db.rawQuery(
@@ -100,16 +100,14 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             ,arrayOf(promptId)
         )
 
-        if (cursor.count == 0){
+        if (cursor.count == 0)
             db.execSQL(
                 "INSERT INTO user_entries (prompt_id, prompt, datetime) VALUES (?, ?, ?)"
                 ,arrayOf(promptId, inputPrompt, System.currentTimeMillis())
             )
-            return false
-        }
 
         cursor.close()
-        return true
+        return
     }
 
     fun getSelectResults(inputQuery: String): List<Map<String, Any?>>{
