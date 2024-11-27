@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#272525"
+    android:background="#212121"
     tools:context=".EntryListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
