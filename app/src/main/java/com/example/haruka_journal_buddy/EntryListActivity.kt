@@ -92,8 +92,6 @@ class EntryListActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener(object : PromptAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-                //Toast.makeText(this@EntryListActivity, "clicked on item $position" + " and id " + entryIds[position], Toast.LENGTH_SHORT).show()
-
                 val intent = Intent(this@EntryListActivity, MainActivity::class.java)
                 intent.putExtra("EXTRA_STRING", entryIds[position])
                 startActivity(intent)
