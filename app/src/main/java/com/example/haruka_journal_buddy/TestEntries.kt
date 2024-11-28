@@ -31,4 +31,54 @@ object TestEntries {
         put("datetime_created", "2024-11-24 11:42:07")
         put("datetime_last_modified", "2024-11-24 1:00:00")
     }
+
+    val testValues4= ContentValues().apply{
+        put("entry_id", 4)
+        put("prompt_id", "tst4")
+        put("prompt", "What's one thing you wish improved about your life right now?")
+        put("entry", "I wish this project was finished lol. Seriously, it's pretty hard.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-24 11:42:07")
+        put("datetime_last_modified", "2024-11-24 1:00:00")
+    }
+
+    val testValues5= ContentValues().apply{
+        put("entry_id", 5)
+        put("prompt_id", "tst5")
+        put("prompt", "Do you have a favorite fast food restaurant?")
+        put("entry", "In-N-Out for sure. But shoutouts to Raising Canes as the runner up.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-24 11:42:07")
+        put("datetime_last_modified", "2024-11-24 1:00:00")
+    }
+
+    val testValues6= ContentValues().apply{
+        put("entry_id", 6)
+        put("prompt_id", "tst6")
+        put("prompt", "Is there a kind of Youtube content you've been into lately?")
+        put("entry", "I've been watching a lot of Summoning Salt recently. He does documentaries on video game speedruns, where they try to beat the games as fast as possible.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-24 11:42:07")
+        put("datetime_last_modified", "2024-11-24 1:00:00")
+    }
+
+    val testValues7= ContentValues().apply{
+        put("entry_id", 7)
+        put("prompt_id", "tst7")
+        put("prompt", "What's been your go-to snack recently?")
+        put("entry", "I've been eating a lot of Pringles recently. Ever since I watched Charlie's tier list on them, I've been really into it. My favorite is either farmhouse cheddar or sweet potato sea salt.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-24 11:42:07")
+        put("datetime_last_modified", "2024-11-24 1:00:00")
+    }
+
+    val testValues8= ContentValues().apply{
+        put("entry_id", 8)
+        put("prompt_id", "tst8")
+        put("prompt", "What motivates you to finish mundane tasks?")
+        put("entry", "Tbh, it's pretty hard. But some days, I just have this urge to lock in, and I'm really good at doing that stuff on that day.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-24 11:42:07")
+        put("datetime_last_modified", "2024-11-24 1:00:00")
+    }
 }

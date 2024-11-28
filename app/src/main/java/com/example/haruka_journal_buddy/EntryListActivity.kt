@@ -5,6 +5,7 @@ import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,11 @@ class EntryListActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val menuButton: Button = findViewById(R.id.menu_button)
+        menuButton.setOnClickListener {
+
         }
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
@@ -67,9 +73,7 @@ class EntryListActivity : AppCompatActivity() {
             entryIds.add(entry["entry_id"].toString())
             addDrawableImage(this, entry["icon_filename"].toString())
             headings.add(entry["prompt"].toString())
-            descs.add(
-                truncateDesc(entry["entry"].toString())
-            )
+            descs.add(entry["entry"].toString())
         }
 
         promptRecyclerView = findViewById(R.id.prompt_list)
@@ -121,5 +125,10 @@ class EntryListActivity : AppCompatActivity() {
         db.insert("user_entries", null, TestEntries.testValues1)
         db.insert("user_entries", null, TestEntries.testValues2)
         db.insert("user_entries", null, TestEntries.testValues3)
+        db.insert("user_entries", null, TestEntries.testValues4)
+        db.insert("user_entries", null, TestEntries.testValues5)
+        db.insert("user_entries", null, TestEntries.testValues6)
+        db.insert("user_entries", null, TestEntries.testValues7)
+        db.insert("user_entries", null, TestEntries.testValues8)
     }
 }
