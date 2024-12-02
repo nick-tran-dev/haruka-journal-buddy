@@ -36,7 +36,7 @@ class EntryListActivity : AppCompatActivity() {
 
         val menuButton: Button = findViewById(R.id.menu_button)
         menuButton.setOnClickListener {
-
+            startActivity(Intent(this, MenuActivity::class.java))
         }
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
