@@ -5,14 +5,17 @@ import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 
 class EntryListActivity : AppCompatActivity() {
     private val DESC_MAX = 50
@@ -34,9 +37,32 @@ class EntryListActivity : AppCompatActivity() {
             insets
         }
 
-        val menuButton: Button = findViewById(R.id.menu_button)
+        val menuButton: MaterialButton = findViewById(R.id.menu_button)
+        val menuDaily: Button = findViewById(R.id.entry_menu_daily)
+        val overlay: View = findViewById(R.id.entry_list_overlay)
+        var menuVisible = false
+
         menuButton.setOnClickListener {
-            startActivity(Intent(this, MenuActivity::class.java))
+            //startActivity(Intent(this, MenuActivity::class.java))
+
+            if (!menuVisible){
+                menuVisible = true
+                //menuButton.bringToFront()
+                overlay.visibility = View.VISIBLE
+                menuDaily.visibility = View.VISIBLE
+                menuButton.icon = null
+                menuButton.text = "Back"
+            }
+
+            else{
+                menuVisible = false
+                overlay.visibility = View.INVISIBLE
+                menuDaily.visibility = View.INVISIBLE
+                menuButton.icon = ContextCompat.getDrawable(this, R.drawable.baseline_menu_24)
+                menuButton.text = ""
+            }
+
+
         }
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
