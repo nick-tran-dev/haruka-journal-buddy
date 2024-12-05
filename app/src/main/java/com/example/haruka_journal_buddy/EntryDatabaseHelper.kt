@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 
 import android.database.Cursor
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import java.util.Date
 import java.util.Locale
 
@@ -66,7 +67,7 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                 ,arrayOf(id.toString())
             )
             "setting_by_id" -> this.readableDatabase.rawQuery(
-                "SELECT setting_id FROM user_settings WHERE setting_id = ?"
+                "SELECT value FROM user_settings WHERE setting_id = ?"
                 ,arrayOf(id.toString())
             )
             else -> null

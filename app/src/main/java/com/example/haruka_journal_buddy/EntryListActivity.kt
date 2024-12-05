@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -116,6 +117,11 @@ class EntryListActivity : AppCompatActivity() {
         promptRecyclerView.setHasFixedSize(true)
 
         entryList = arrayListOf<SavedEntry>()
+
+        val hello: TextView = findViewById(R.id.prompt_list_hello)
+        hello.text = "Hi " + dbHelper.selectStrFromDb("setting_by_id", "user_name", "value")
+
+        //println(dbHelper.selectStrFromDb("setting_by_id", "user_name", "setting_id"))
 
         getUserEntries()
     }
