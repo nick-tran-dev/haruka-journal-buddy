@@ -36,10 +36,16 @@ class EntryListActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        
+        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        val userDb = dbHelper.writableDatabase
 
         val menuButton: MaterialButton = findViewById(R.id.menu_button)
-        val menuDaily: Button = findViewById(R.id.entry_menu_daily)
         val overlay: View = findViewById(R.id.entry_list_overlay)
+        val menuDaily: Button = findViewById(R.id.entry_menu_daily)
+        val menuPrompts: Button = findViewById(R.id.entry_menu_prompts)
+        val menuSettings: Button = findViewById(R.id.entry_menu_settings)
+
         var menuVisible = false
 
         menuButton.setOnClickListener {
@@ -47,32 +53,35 @@ class EntryListActivity : AppCompatActivity() {
 
             if (!menuVisible){
                 menuVisible = true
-                //menuButton.bringToFront()
-                overlay.visibility = View.VISIBLE
-                menuDaily.visibility = View.VISIBLE
+
+                listOf(overlay, menuDaily, menuPrompts, menuSettings).forEach{
+                    it.visibility = View.VISIBLE
+                }
+
                 menuButton.icon = null
                 menuButton.text = "Back"
             }
 
             else{
                 menuVisible = false
-                overlay.visibility = View.INVISIBLE
-                menuDaily.visibility = View.INVISIBLE
+
+                listOf(overlay, menuDaily, menuPrompts, menuSettings).forEach{
+                    it.visibility = View.INVISIBLE
+                }
+
                 menuButton.icon = ContextCompat.getDrawable(this, R.drawable.baseline_menu_24)
                 menuButton.text = ""
             }
-
-
         }
 
-        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
-        val entryDb = dbHelper.writableDatabase
+        menuSettings.setOnClickListener{ startActivity(Intent(this, SettingsActivity::class.java)) }
+
 
         /*
         * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
         * */
         dbHelper.WIPEDATABASE()
-        testInsert1(entryDb)
+        testInsert1(userDb)
         /*
         *
         * */
@@ -92,7 +101,7 @@ class EntryListActivity : AppCompatActivity() {
         descs = mutableListOf()
 
         val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
-        val entryDb = dbHelper.writableDatabase
+        val userDb = dbHelper.writableDatabase
         val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
 
         for (entry in entries){

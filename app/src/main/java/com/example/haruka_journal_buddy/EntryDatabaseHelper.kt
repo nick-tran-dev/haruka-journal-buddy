@@ -13,6 +13,11 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     val selectAll: String = "SELECT * FROM user_entries"
     val selectAllModOrdered: String = "SELECT * FROM user_entries ORDER BY datetime_last_modified DESC"
 
+    private val settingsList = mapOf(
+        "done_first_time" to "0"
+        ,"user_name" to "Nicole"
+    )
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE IF NOT EXISTS user_entries (" +
                 "entry_id INTEGER PRIMARY KEY" +
@@ -24,16 +29,26 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                 ",datetime_last_modified DATETIME" +
             ")"
         )
+
+        db?.execSQL("CREATE TABLE IF NOT EXISTS user_settings (" +
+                "setting_id TEXT PRIMARY KEY" +
+                ",value TEXT" +
+                ",default_value" +
+                ")"
+        )
+
+        firstTimeSetup()
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int){
-        db?.execSQL("DROP TABLE IF EXISTS user_entries")
+        db?.execSQL("DROP TABLE IF EXISTS user_settings")
         onCreate(db)
     }
 
     fun WIPEDATABASE() {
         val db = this.writableDatabase
         db.execSQL("DROP TABLE IF EXISTS user_entries")
+        db?.execSQL("DROP TABLE IF EXISTS user_settings")
         onCreate(db)
     }
 
@@ -48,6 +63,10 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             )
             "entry_by_prompt_id" -> this.readableDatabase.rawQuery(
                 "SELECT entry_id FROM user_entries WHERE prompt_id = ?"
+                ,arrayOf(id.toString())
+            )
+            "setting_by_id" -> this.readableDatabase.rawQuery(
+                "SELECT setting_id FROM user_settings WHERE setting_id = ?"
                 ,arrayOf(id.toString())
             )
             else -> null
@@ -126,6 +145,36 @@ class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         }}
 
         return result
+    }
+
+    fun updateSetting(setting: String, inputValue: String){
+        this.writableDatabase.execSQL(
+            "UPDATE user_settings SET value = ? WHERE setting_id = ?"
+            ,arrayOf(inputValue, setting)
+        )
+    }
+
+    private fun firstTimeSetup(){
+        val db = this.readableDatabase
+
+        val cursor: Cursor = db.rawQuery(
+            "SELECT setting_id FROM user_settings WHERE setting_id = 'done_first_time'"
+            ,null
+        )
+
+        if (cursor.count > 0){
+            cursor.close()
+            return
+        }
+        else
+            cursor.close()
+
+        for ((key, value) in settingsList)
+            db.execSQL(
+                "INSERT INTO user_settings (setting_id, value, default_value) VALUES (?, ?, ?)"
+                ,arrayOf(key, value, value)
+            )
+
     }
 
     private fun now(): String{
