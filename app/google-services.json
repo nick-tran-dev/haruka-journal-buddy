@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370200621056",
+    "project_id": "haruka-journal-buddy",
+    "storage_bucket": "haruka-journal-buddy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370200621056:android:5876aa48c1ceb7efb768e5",
+        "android_client_info": {
+          "package_name": "com.example.haruka_journal_buddy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAomaGTGH0VzlUR6zNhlugrYDVIi71WOYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

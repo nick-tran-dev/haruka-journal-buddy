@@ -6,11 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper
 
 import android.database.Cursor
 import android.icu.text.SimpleDateFormat
-import android.util.Log
 import java.util.Date
 import java.util.Locale
 
-class EntryDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     val selectAll: String = "SELECT * FROM user_entries"
     val selectAllModOrdered: String = "SELECT * FROM user_entries ORDER BY datetime_last_modified DESC"
 

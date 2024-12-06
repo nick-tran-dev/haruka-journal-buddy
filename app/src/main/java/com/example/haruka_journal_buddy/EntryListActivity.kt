@@ -1,14 +1,13 @@
 package com.example.haruka_journal_buddy
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,17 +16,20 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.FirebaseFirestore
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class EntryListActivity : AppCompatActivity() {
-    private val DESC_MAX = 50
-
     private lateinit var promptRecyclerView: RecyclerView
+
     private lateinit var entryList: ArrayList<SavedEntry>
     lateinit var entryIds: MutableList<String>
     lateinit var imageIds: MutableList<Int>
     lateinit var headings: MutableList<String>
     lateinit var descs: MutableList<String>
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,7 +40,7 @@ class EntryListActivity : AppCompatActivity() {
             insets
         }
         
-        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        val dbHelper : DatabaseHelper = DatabaseHelper(this)
         val userDb = dbHelper.writableDatabase
 
         val menuButton: MaterialButton = findViewById(R.id.menu_button)
@@ -59,6 +61,8 @@ class EntryListActivity : AppCompatActivity() {
                     it.visibility = View.VISIBLE
                 }
 
+                overlay.setOnTouchListener { _, _ -> true } // disables recyclerview clicks
+
                 menuButton.icon = null
                 menuButton.text = "Back"
             }
@@ -70,12 +74,15 @@ class EntryListActivity : AppCompatActivity() {
                     it.visibility = View.INVISIBLE
                 }
 
+                overlay.setOnTouchListener(null) // enables recyclerview clicks
+
                 menuButton.icon = ContextCompat.getDrawable(this, R.drawable.baseline_menu_24)
                 menuButton.text = ""
             }
         }
 
         menuSettings.setOnClickListener{ startActivity(Intent(this, SettingsActivity::class.java)) }
+        menuDaily.setOnClickListener{ startActivity(Intent(this, DailyActivity::class.java)) }
 
 
         /*
@@ -88,6 +95,8 @@ class EntryListActivity : AppCompatActivity() {
         * */
 
         refreshRecycler()
+
+        //fireTest()
     }
 
     override fun onResume(){
@@ -101,7 +110,7 @@ class EntryListActivity : AppCompatActivity() {
         headings = mutableListOf()
         descs = mutableListOf()
 
-        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        val dbHelper : DatabaseHelper = DatabaseHelper(this)
         val userDb = dbHelper.writableDatabase
         val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
 
@@ -120,8 +129,6 @@ class EntryListActivity : AppCompatActivity() {
 
         val hello: TextView = findViewById(R.id.prompt_list_hello)
         hello.text = "Hi " + dbHelper.selectStrFromDb("setting_by_id", "user_name", "value")
-
-        //println(dbHelper.selectStrFromDb("setting_by_id", "user_name", "setting_id"))
 
         getUserEntries()
     }
@@ -155,11 +162,24 @@ class EntryListActivity : AppCompatActivity() {
             imageIds.add(R.drawable.failsafe_img)
     }
 
-    private fun truncateDesc(input: String): String {
-        return if(input.length > DESC_MAX)
-            input.substring(0, DESC_MAX).trimEnd() + "..."
-        else
-            input
+    private fun fireTest(){
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("daily_prompts")
+            .whereEqualTo("month", 12)
+            .whereEqualTo("day", 5)
+            .whereEqualTo("year", 2024)
+            .get()
+            .addOnSuccessListener{ querySnapshot ->
+                for (document in querySnapshot) {
+                    println("Document ID: ${document.id}")
+                    println("Data: ${document.data}")
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                println("Error fetching documents: $exception")
+            }
     }
 
     private fun testInsert1(db : SQLiteDatabase){

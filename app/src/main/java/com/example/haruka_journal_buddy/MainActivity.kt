@@ -1,12 +1,8 @@
 package com.example.haruka_journal_buddy
 
-import android.content.ContentValues
-import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -29,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         val passedString = intent.getStringExtra("EXTRA_STRING")
         val currentEntry = passedString?.toIntOrNull()
 
-        val dbHelper : EntryDatabaseHelper = EntryDatabaseHelper(this)
+        val dbHelper : DatabaseHelper = DatabaseHelper(this)
         val entryBody = findViewById<EditText>(R.id.entry_body)
 
         entryBody.addTextChangedListener(object : TextWatcher{
