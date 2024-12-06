@@ -96,6 +96,9 @@ class EntryListActivity : AppCompatActivity() {
 
         refreshRecycler()
 
+        dbHelper.close()
+        userDb.close()
+
         //fireTest()
     }
 
@@ -111,8 +114,8 @@ class EntryListActivity : AppCompatActivity() {
         descs = mutableListOf()
 
         val dbHelper : DatabaseHelper = DatabaseHelper(this)
-        val userDb = dbHelper.writableDatabase
         val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
+        dbHelper.close()
 
         for (entry in entries){
             entryIds.add(entry["entry_id"].toString())

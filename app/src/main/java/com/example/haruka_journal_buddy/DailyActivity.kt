@@ -22,16 +22,15 @@ class DailyActivity : AppCompatActivity() {
         }
 
         fetchDailyPrompt()
-
     }
 
     private fun fetchDailyPrompt(){
-        val promptId : String
+        var promptId : String?
+        var prompt : String?
 
+        val dbHelper : DatabaseHelper = DatabaseHelper(this)
 
         val datePst = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
-
-        //val db = FirebaseFirestore.getInstance()
 
         FirebaseFirestore.getInstance().collection("daily_prompts")
             .whereEqualTo("month", datePst.month.value)
@@ -40,13 +39,34 @@ class DailyActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener{ querySnapshot ->
                 for (document in querySnapshot) {
+                    /*
                     println("Document ID: ${document.id}")
                     println("Data: ${document.data}")
-                }
+                     */
+                    promptId = document.id
+                    prompt = document.getString("prompt")
 
+                    val dbPromptId : String? = dbHelper.selectStrFromDb(
+                        "element_by_prompt_id", promptId, "prompt_id"
+                    )
+
+                    if (dbPromptId == null)
+                        raisePrompt(false, promptId, prompt)
+                    else
+                        raisePrompt(true, promptId, prompt)
+
+                    break // protection against dupe valid dates
+                }
             }
+
             .addOnFailureListener { exception ->
                 println("Error fetching documents: $exception")
             }
+
+
+    }
+
+    private fun raisePrompt(inDb: Boolean, promptId: String?, prompt: String?){
+
     }
 }
