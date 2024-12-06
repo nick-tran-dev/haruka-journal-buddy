@@ -1,11 +1,14 @@
 package com.example.haruka_journal_buddy
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -30,7 +33,8 @@ class DailyActivity : AppCompatActivity() {
 
         val dbHelper : DatabaseHelper = DatabaseHelper(this)
 
-        val datePst = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
+        //val datePst = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
+        val datePst = LocalDate.of(2024, 12, 5)
 
         FirebaseFirestore.getInstance().collection("daily_prompts")
             .whereEqualTo("month", datePst.month.value)
@@ -38,6 +42,10 @@ class DailyActivity : AppCompatActivity() {
             .whereEqualTo("year", datePst.year)
             .get()
             .addOnSuccessListener{ querySnapshot ->
+                if (querySnapshot.isEmpty) {
+                    println("No documents found.")
+                }
+
                 for (document in querySnapshot) {
                     /*
                     println("Document ID: ${document.id}")
@@ -67,6 +75,17 @@ class DailyActivity : AppCompatActivity() {
     }
 
     private fun raisePrompt(inDb: Boolean, promptId: String?, prompt: String?){
+        val promptTextView = findViewById<TextView>(R.id.daily_prompt)
+        val entryButton = findViewById<Button>(R.id.entry_button)
+        val returnButton = findViewById<Button>(R.id.return_button)
 
+        promptTextView.text = prompt
+
+        if (inDb){
+            entryButton.text = "Resume"
+        }
+        else{
+
+        }
     }
 }
