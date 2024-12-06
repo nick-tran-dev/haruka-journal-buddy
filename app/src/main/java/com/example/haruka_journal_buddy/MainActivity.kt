@@ -12,6 +12,9 @@ import androidx.core.view.WindowInsetsCompat
 
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var dbHelper: DatabaseHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,7 +28,8 @@ class MainActivity : AppCompatActivity() {
         val passedString = intent.getStringExtra("EXTRA_STRING")
         val currentEntry = passedString?.toIntOrNull()
 
-        val dbHelper : DatabaseHelper = DatabaseHelper(this)
+        //val dbHelper : DatabaseHelper = DatabaseHelper(this)
+        dbHelper = DatabaseHelper(this)
         val entryBody = findViewById<EditText>(R.id.entry_body)
 
         entryBody.addTextChangedListener(object : TextWatcher{
@@ -36,9 +40,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
         setCurrentPrompt(
@@ -53,5 +55,10 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentPrompt(inputString: String?) {
         val textViewTest: TextView = findViewById<TextView>(R.id.textview_test)
         textViewTest.text = inputString
+    }
+
+    override fun onDestroy(){
+        super.onDestroy()
+        dbHelper.close()
     }
 }

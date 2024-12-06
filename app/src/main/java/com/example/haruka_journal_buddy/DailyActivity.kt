@@ -1,6 +1,10 @@
 package com.example.haruka_journal_buddy
 
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -24,12 +28,21 @@ class DailyActivity : AppCompatActivity() {
             insets
         }
 
+        findViewById<TextView>(R.id.error_back_button).setOnClickListener{
+            startActivity(Intent(this, EntryListActivity::class.java))
+        }
+
+        fetchDailyPrompt()
+    }
+
+    override fun onResume(){
+        super.onResume()
         fetchDailyPrompt()
     }
 
     private fun fetchDailyPrompt(){
-        var promptId : String?
-        var prompt : String?
+        //val promptId : String?
+        //val prompt : String?
 
         val dbHelper : DatabaseHelper = DatabaseHelper(this)
 
@@ -42,50 +55,91 @@ class DailyActivity : AppCompatActivity() {
             .whereEqualTo("year", datePst.year)
             .get()
             .addOnSuccessListener{ querySnapshot ->
-                if (querySnapshot.isEmpty) {
-                    println("No documents found.")
-                }
+                if (querySnapshot.isEmpty)
+                    firebaseFetchError()
 
                 for (document in querySnapshot) {
-                    /*
-                    println("Document ID: ${document.id}")
-                    println("Data: ${document.data}")
-                     */
-                    promptId = document.id
-                    prompt = document.getString("prompt")
+                    val promptId = document.id
+                    val prompt = document.getString("prompt")
 
-                    val dbPromptId : String? = dbHelper.selectStrFromDb(
-                        "element_by_prompt_id", promptId, "prompt_id"
-                    )
+                    raisePrompt(dbHelper.promptExists(promptId), promptId, prompt)
 
-                    if (dbPromptId == null)
-                        raisePrompt(false, promptId, prompt)
-                    else
-                        raisePrompt(true, promptId, prompt)
-
+                    dbHelper.close()
                     break // protection against dupe valid dates
                 }
             }
 
             .addOnFailureListener { exception ->
                 println("Error fetching documents: $exception")
+                firebaseFetchError()
             }
-
-
     }
 
     private fun raisePrompt(inDb: Boolean, promptId: String?, prompt: String?){
         val promptTextView = findViewById<TextView>(R.id.daily_prompt)
         val entryButton = findViewById<Button>(R.id.entry_button)
         val returnButton = findViewById<Button>(R.id.return_button)
+        val divider = findViewById<View>(R.id.divider)
 
         promptTextView.text = prompt
+        findViewById<TextView>(R.id.error_back_button).visibility = View.INVISIBLE
+
+        listOf(entryButton, returnButton, divider).forEach{
+            it.visibility = View.VISIBLE
+        }
+
+        val dbHelper : DatabaseHelper = DatabaseHelper(this)
+        val userDb = dbHelper.writableDatabase
+        var entryId : Int?
 
         if (inDb){
             entryButton.text = "Resume"
-        }
-        else{
+            entryId = dbHelper.selectStrFromDb(
+                "entry_by_prompt_id", promptId, "entry_id"
+            )?.toInt()
 
+            entryButton.setOnClickListener{
+                val intent = Intent(this@DailyActivity, MainActivity::class.java)
+                intent.putExtra("EXTRA_STRING", entryId.toString())
+                startActivity(intent)
+            }
         }
+
+        else{
+            entryId = dbHelper.selectIntFromDb("top_entry", null, "max_entry_id")
+
+            if (entryId == null)
+                entryId = 1
+            else
+                entryId++
+
+            entryButton.setOnClickListener{
+                userDb.insert(
+                    "user_entries"
+                    ,null
+                    ,ContentValues().apply{
+                        put("entry_id", entryId)
+                        put("prompt_id", promptId)
+                        put("prompt", prompt)
+                        put("entry", "")
+                        put("icon_filename", "test_image1")
+                        put("datetime_created", dbHelper.now())
+                        put("datetime_last_modified", dbHelper.now())
+                    }
+                )
+
+                val intent = Intent(this@DailyActivity, MainActivity::class.java)
+                intent.putExtra("EXTRA_STRING", entryId.toString())
+                startActivity(intent)
+            }
+        }
+
+        //dbHelper.close()
+        //userDb.close()
+    }
+
+    private fun firebaseFetchError(){
+        findViewById<TextView>(R.id.daily_prompt).text = "Error"
+        findViewById<TextView>(R.id.error_textview).visibility = View.VISIBLE
     }
 }

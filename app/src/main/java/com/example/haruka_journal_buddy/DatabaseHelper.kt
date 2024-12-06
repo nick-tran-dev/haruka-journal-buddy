@@ -126,7 +126,24 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             )
 
         cursor.close()
+        db.close()
         return
+    }
+
+    fun promptExists(promptId: String): Boolean{
+        val db = this.readableDatabase
+        val exists : Boolean
+
+        val cursor : Cursor = db.rawQuery(
+            "SELECT prompt_id, prompt FROM user_entries WHERE prompt_id = ?"
+            ,arrayOf(promptId)
+        )
+
+        exists = (cursor.count != 0)
+
+        cursor.close()
+        db.close()
+        return exists
     }
 
     fun getSelectResults(inputQuery: String): List<Map<String, Any?>>{
@@ -154,6 +171,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         )
     }
 
+    fun now(): String{
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+    }
+
     private fun firstTimeSetup(){
         val db = this.readableDatabase
 
@@ -175,10 +196,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 ,arrayOf(key, value, value)
             )
 
-    }
-
-    private fun now(): String{
-        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
     }
 
     companion object {

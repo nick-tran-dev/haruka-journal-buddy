@@ -16,9 +16,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.firebase.firestore.FirebaseFirestore
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class EntryListActivity : AppCompatActivity() {
     private lateinit var promptRecyclerView: RecyclerView
@@ -163,26 +160,6 @@ class EntryListActivity : AppCompatActivity() {
             imageIds.add(fileId)
         else
             imageIds.add(R.drawable.failsafe_img)
-    }
-
-    private fun fireTest(){
-        val db = FirebaseFirestore.getInstance()
-
-        db.collection("daily_prompts")
-            .whereEqualTo("month", 12)
-            .whereEqualTo("day", 5)
-            .whereEqualTo("year", 2024)
-            .get()
-            .addOnSuccessListener{ querySnapshot ->
-                for (document in querySnapshot) {
-                    println("Document ID: ${document.id}")
-                    println("Data: ${document.data}")
-                }
-
-            }
-            .addOnFailureListener { exception ->
-                println("Error fetching documents: $exception")
-            }
     }
 
     private fun testInsert1(db : SQLiteDatabase){
