@@ -81,4 +81,24 @@ object TestEntries {
         put("datetime_created", "2024-11-24 11:42:07")
         put("datetime_last_modified", "2024-11-24 1:00:00")
     }
+
+    val testValues9= ContentValues().apply{
+        put("entry_id", 9)
+        put("prompt_id", "tst9")
+        put("prompt", "Do you have a café you frequent?")
+        put("entry", "I guess I frequent the school's Starbucks. I'm sick of Starbucks lol.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-25 11:42:07")
+        put("datetime_last_modified", "2024-11-25 1:00:00")
+    }
+
+    val testValues10= ContentValues().apply{
+        put("entry_id", 10)
+        put("prompt_id", "tst10")
+        put("prompt", "How's your daily commute?")
+        put("entry", "Sucks.")
+        put("icon_filename", "test_image1")
+        put("datetime_created", "2024-11-26 11:42:07")
+        put("datetime_last_modified", "2024-11-26 1:00:00")
+    }
 }

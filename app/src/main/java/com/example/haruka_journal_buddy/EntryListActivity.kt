@@ -26,6 +26,9 @@ class EntryListActivity : AppCompatActivity() {
     lateinit var headings: MutableList<String>
     lateinit var descs: MutableList<String>
 
+    private lateinit var dbHelper : DatabaseHelper
+    private lateinit var userDb : SQLiteDatabase
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +40,8 @@ class EntryListActivity : AppCompatActivity() {
             insets
         }
         
-        val dbHelper : DatabaseHelper = DatabaseHelper(this)
-        val userDb = dbHelper.writableDatabase
+        //val dbHelper : DatabaseHelper = DatabaseHelper(this)
+        //val userDb = dbHelper.writableDatabase
 
         val menuButton: MaterialButton = findViewById(R.id.menu_button)
         val overlay: View = findViewById(R.id.entry_list_overlay)
@@ -81,20 +84,25 @@ class EntryListActivity : AppCompatActivity() {
         menuSettings.setOnClickListener{ startActivity(Intent(this, SettingsActivity::class.java)) }
         menuDaily.setOnClickListener{ startActivity(Intent(this, DailyActivity::class.java)) }
 
-
         /*
         * INCLUDED FOR TESTING PURPOSES ONLY. DELETE WHEN APPLICABLE
         * */
+        dbHelper = DatabaseHelper(this)
+        userDb = dbHelper.writableDatabase
+
         dbHelper.WIPEDATABASE()
         testInsert1(userDb)
+
+        dbHelper.close()
+        userDb.close()
         /*
         *
         * */
 
-        refreshRecycler()
+        //refreshRecycler()
 
-        dbHelper.close()
-        userDb.close()
+        //dbHelper.close()
+        //userDb.close()
 
         //fireTest()
     }
@@ -105,6 +113,9 @@ class EntryListActivity : AppCompatActivity() {
     }
 
     private fun refreshRecycler(){
+        dbHelper = DatabaseHelper(this)
+        userDb = dbHelper.writableDatabase
+
         entryIds = mutableListOf()
         imageIds = mutableListOf()
         headings = mutableListOf()
@@ -131,6 +142,9 @@ class EntryListActivity : AppCompatActivity() {
         hello.text = "Hi " + dbHelper.selectStrFromDb("setting_by_id", "user_name", "value")
 
         getUserEntries()
+
+        dbHelper.close()
+        userDb.close()
     }
 
     private fun getUserEntries(){
@@ -171,5 +185,7 @@ class EntryListActivity : AppCompatActivity() {
         db.insert("user_entries", null, TestEntries.testValues6)
         db.insert("user_entries", null, TestEntries.testValues7)
         db.insert("user_entries", null, TestEntries.testValues8)
+        db.insert("user_entries", null, TestEntries.testValues9)
+        db.insert("user_entries", null, TestEntries.testValues10)
     }
 }

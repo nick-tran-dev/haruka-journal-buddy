@@ -35,9 +35,6 @@ class DailyActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.error_back_button).setOnClickListener{
             startActivity(Intent(this, EntryListActivity::class.java))
         }
-
-
-
         //fetchDailyPrompt()
     }
 
@@ -76,8 +73,6 @@ class DailyActivity : AppCompatActivity() {
                 for (document in querySnapshot) {
                     val promptId = document.id
                     val prompt = document.getString("prompt")
-
-                    Log.d("prompt_id and exists", promptId + " " + dbHelper.promptExists(promptId).toString())
 
                     raisePrompt(dbHelper.promptExists(promptId), promptId, prompt)
 

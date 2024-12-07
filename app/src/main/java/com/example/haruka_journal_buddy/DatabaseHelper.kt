@@ -93,7 +93,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val result : Int?
 
         if (cursor != null && cursor.moveToFirst())
-           result = cursor.getInt(cursor.getColumnIndexOrThrow(column))
+            result = cursor.getInt(cursor.getColumnIndexOrThrow(column))
         else
             result = null
 
@@ -109,25 +109,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             "UPDATE user_entries SET $elementChoose = ?, datetime_last_modified = ? WHERE entry_id = ?"
             ,arrayOf(inputElement, now(), id)
         )
-    }
-
-    fun checkPrompt(promptId : String, inputPrompt : String){
-        val db = this.readableDatabase
-
-        val cursor : Cursor = db.rawQuery(
-            "SELECT prompt_id, prompt FROM user_entries WHERE prompt_id = ?"
-            ,arrayOf(promptId)
-        )
-
-        if (cursor.count == 0)
-            db.execSQL(
-                "INSERT INTO user_entries (prompt_id, prompt, datetime) VALUES (?, ?, ?)"
-                ,arrayOf(promptId, inputPrompt, System.currentTimeMillis())
-            )
-
-        cursor.close()
-        db.close()
-        return
     }
 
     fun promptExists(promptId: String): Boolean{
