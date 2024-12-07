@@ -2,6 +2,7 @@ package com.example.haruka_journal_buddy
 
 import android.content.ContentValues
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,6 +19,9 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class DailyActivity : AppCompatActivity() {
+    private lateinit var dbHelper : DatabaseHelper
+    private lateinit var userDb: SQLiteDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,19 +36,30 @@ class DailyActivity : AppCompatActivity() {
             startActivity(Intent(this, EntryListActivity::class.java))
         }
 
-        fetchDailyPrompt()
+
+
+        //fetchDailyPrompt()
     }
 
     override fun onResume(){
         super.onResume()
+        dbHelper = DatabaseHelper(this)
+        userDb = dbHelper.writableDatabase
         fetchDailyPrompt()
     }
+
+    override fun onDestroy(){
+        super.onDestroy()
+        dbHelper.close()
+        userDb.close()
+    }
+
 
     private fun fetchDailyPrompt(){
         //val promptId : String?
         //val prompt : String?
 
-        val dbHelper : DatabaseHelper = DatabaseHelper(this)
+        //val dbHelper : DatabaseHelper = DatabaseHelper(this)
 
         //val datePst = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
         val datePst = LocalDate.of(2024, 12, 5)
@@ -62,9 +77,10 @@ class DailyActivity : AppCompatActivity() {
                     val promptId = document.id
                     val prompt = document.getString("prompt")
 
+                    Log.d("prompt_id and exists", promptId + " " + dbHelper.promptExists(promptId).toString())
+
                     raisePrompt(dbHelper.promptExists(promptId), promptId, prompt)
 
-                    dbHelper.close()
                     break // protection against dupe valid dates
                 }
             }
@@ -88,8 +104,11 @@ class DailyActivity : AppCompatActivity() {
             it.visibility = View.VISIBLE
         }
 
-        val dbHelper : DatabaseHelper = DatabaseHelper(this)
-        val userDb = dbHelper.writableDatabase
+        returnButton.setOnClickListener{ startActivity(Intent(this, EntryListActivity::class.java)) }
+
+        //val dbHelper : DatabaseHelper = DatabaseHelper(this)
+        //val userDb = dbHelper.writableDatabase
+
         var entryId : Int?
 
         if (inDb){
@@ -134,8 +153,9 @@ class DailyActivity : AppCompatActivity() {
             }
         }
 
-        //dbHelper.close()
+
         //userDb.close()
+        //dbHelper.close()
     }
 
     private fun firebaseFetchError(){

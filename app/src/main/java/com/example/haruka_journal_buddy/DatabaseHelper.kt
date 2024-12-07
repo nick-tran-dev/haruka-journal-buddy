@@ -141,8 +141,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
         exists = (cursor.count != 0)
 
-        cursor.close()
-        db.close()
         return exists
     }
 
