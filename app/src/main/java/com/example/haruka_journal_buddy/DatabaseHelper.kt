@@ -158,7 +158,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.readableDatabase
 
         val cursor: Cursor = db.rawQuery(
-            "SELECT setting_id FROM user_settings WHERE setting_id = 'done_first_time'"
+            "SELECT setting_id FROM user_settings WHERE setting_id = 'done_first_time' AND value = '0'"
             ,null
         )
 
