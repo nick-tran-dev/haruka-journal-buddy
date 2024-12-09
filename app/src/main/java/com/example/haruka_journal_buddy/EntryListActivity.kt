@@ -22,7 +22,7 @@ class EntryListActivity : AppCompatActivity() {
 
     private lateinit var entryList: ArrayList<SavedEntry>
     lateinit var entryIds: MutableList<String>
-    lateinit var imageIds: MutableList<Int>
+    lateinit var dates: MutableList<String>
     lateinit var headings: MutableList<String>
     lateinit var descs: MutableList<String>
 
@@ -98,13 +98,6 @@ class EntryListActivity : AppCompatActivity() {
         /*
         *
         * */
-
-        //refreshRecycler()
-
-        //dbHelper.close()
-        //userDb.close()
-
-        //fireTest()
     }
 
     override fun onResume(){
@@ -117,19 +110,29 @@ class EntryListActivity : AppCompatActivity() {
         userDb = dbHelper.writableDatabase
 
         entryIds = mutableListOf()
-        imageIds = mutableListOf()
+        //imageIds = mutableListOf()
+        dates = mutableListOf()
         headings = mutableListOf()
         descs = mutableListOf()
 
         val dbHelper : DatabaseHelper = DatabaseHelper(this)
-        val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
+        //val entries = dbHelper.getSelectResults(dbHelper.selectAllModOrdered)
+        val entries = dbHelper.getSelectResults(dbHelper.entryListSelect)
         dbHelper.close()
 
         for (entry in entries){
             entryIds.add(entry["entry_id"].toString())
-            addDrawableImage(this, entry["icon_filename"].toString())
+            //addDrawableImage(this, entry["icon_filename"].toString())
+
+            dates.add(
+                entry["month"].toString() + "/" + entry["day"].toString()
+                + "\n" + entry["year"].toString()
+            )
+
             headings.add(entry["prompt"].toString())
             descs.add(entry["entry"].toString())
+
+
         }
 
         promptRecyclerView = findViewById(R.id.prompt_list)
@@ -148,8 +151,9 @@ class EntryListActivity : AppCompatActivity() {
     }
 
     private fun getUserEntries(){
-        for (i in imageIds.indices){
-            val savedEntry = SavedEntry(imageIds[i], headings[i], descs[i])
+        for (i in entryIds.indices){
+            //val savedEntry = SavedEntry(imageIds[i], headings[i], descs[i])
+            val savedEntry = SavedEntry(dates[i], headings[i], descs[i])
             entryList.add(savedEntry)
         }
 
@@ -165,15 +169,6 @@ class EntryListActivity : AppCompatActivity() {
 
         })
         //adapter.notifyDataSetChanged()
-    }
-
-    private fun addDrawableImage(context: Context, drawableName: String){
-        val fileId = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
-
-        if (fileId != 0)
-            imageIds.add(fileId)
-        else
-            imageIds.add(R.drawable.failsafe_img)
     }
 
     private fun testInsert1(db : SQLiteDatabase){

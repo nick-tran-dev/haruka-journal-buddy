@@ -11,7 +11,7 @@ import com.google.android.material.imageview.ShapeableImageView
 
 class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapter<PromptAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View, listener: onItemClickListener) : RecyclerView.ViewHolder(itemView){
-        val titleImage: ShapeableImageView = itemView.findViewById(R.id.title_image)
+        val titleDate: TextView = itemView.findViewById(R.id.date_text)
         val titleHeader: TextView = itemView.findViewById(R.id.title_header)
         val titleDesc: TextView = itemView.findViewById(R.id.title_desc)
 
@@ -37,7 +37,7 @@ class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
-        viewHolder.titleImage.setImageResource(currentItem.titleImage)
+        viewHolder.titleDate.text = currentItem.date
         viewHolder.titleHeader.text = currentItem.heading
         viewHolder.titleDesc.text = currentItem.desc
     }

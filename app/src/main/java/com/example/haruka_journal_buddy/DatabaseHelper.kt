@@ -12,6 +12,16 @@ import java.util.Locale
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     val selectAll: String = "SELECT * FROM user_entries"
     val selectAllModOrdered: String = "SELECT * FROM user_entries ORDER BY datetime_last_modified DESC"
+    val entryListSelect: String = "SELECT" +
+            "    entry_id" +
+            "    ,prompt_id" +
+            "    ,prompt" +
+            "    ,entry" +
+            "    ,datetime_last_modified" +
+            "    ,strftime('%Y', datetime_created) AS year" +
+            "    ,strftime('%m', datetime_created) AS month" +
+            "    ,strftime('%d', datetime_created) AS day" +
+            " FROM user_entries ORDER by datetime_last_modified DESC"
 
     private val settingsList = mapOf(
         "done_first_time" to "0"
@@ -41,6 +51,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int){
+        db?.execSQL("DROP TABLE IF EXISTS user_entries")
         db?.execSQL("DROP TABLE IF EXISTS user_settings")
         onCreate(db)
     }
@@ -98,6 +109,36 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             result = null
 
         cursor?.close()
+        return result
+    }
+
+    fun selectPromptDate(entryId: String): Map<String, String>?{
+       val db = this.readableDatabase
+
+        val cursor : Cursor = db.rawQuery(
+            "SELECT " +
+                    "entry_id" +
+                    "strftime('%Y', datetime_created) AS year, " +
+                    "strftime('%m', datetime_created) AS month, " +
+                    "strftime('%d', datetime_created) AS day " +
+                    "FROM user_entries " +
+                    "WHERE entry_id = ?"
+            ,arrayOf(entryId)
+        )
+
+        val result : Map<String, String>?
+
+        if (cursor != null && cursor.moveToFirst()){
+            result = mapOf(
+                "year" to cursor.getString(cursor.getColumnIndexOrThrow("year"))
+                ,"month" to cursor.getString(cursor.getColumnIndexOrThrow("month"))
+                ,"day" to cursor.getString(cursor.getColumnIndexOrThrow("day"))
+            )
+        }
+        else
+            result = null
+
+        cursor.close()
         return result
     }
 

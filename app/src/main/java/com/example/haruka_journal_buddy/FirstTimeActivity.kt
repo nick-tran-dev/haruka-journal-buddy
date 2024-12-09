@@ -24,7 +24,6 @@ class ViewPagerAdapter(
     ,private val context: Context
 ) : RecyclerView.Adapter<ViewPagerAdapter.PageViewHolder>() {
 
-    // ViewHolder class for managing views
     class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.first_time_main_text)
         val desc: TextView = itemView.findViewById(R.id.first_time_desc)
