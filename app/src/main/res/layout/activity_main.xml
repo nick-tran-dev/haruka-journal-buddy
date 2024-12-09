@@ -35,6 +35,7 @@
         android:background="@android:color/transparent"
         android:gravity="top|start"
         android:hint="What's on your mind?"
+        android:textColorHint="#686868"
         android:inputType="textMultiLine"
         android:lineSpacingExtra="2dp"
         android:maxLines="10"
