@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.Month
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -199,7 +200,7 @@ class EntryListActivity : AppCompatActivity() {
                 entryList = arrayListOf<SavedEntry>()
 
                 val hello: TextView = findViewById(R.id.prompt_list_hello)
-                hello.text = "Prompts from This Month"
+                hello.text = "From " + datePst.month.name.lowercase().replaceFirstChar { it.uppercase() }
 
                 for (i in entryIds.indices){
                     val savedEntry = SavedEntry(dates[i], headings[i], descs[i])
