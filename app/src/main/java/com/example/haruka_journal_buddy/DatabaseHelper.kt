@@ -47,7 +47,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 ")"
         )
 
-        firstTimeSetup()
+        db?.let{ firstTimeSetup(it) }
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int){
@@ -195,10 +196,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
     }
 
-    private fun firstTimeSetup(){
-        val db = this.readableDatabase
-
-        val cursor: Cursor = db.rawQuery(
+    private fun firstTimeSetup(db: SQLiteDatabase?){
+        val cursor: Cursor = db!!.rawQuery(
             "SELECT setting_id FROM user_settings WHERE setting_id = 'done_first_time' AND value = '0'"
             ,null
         )
