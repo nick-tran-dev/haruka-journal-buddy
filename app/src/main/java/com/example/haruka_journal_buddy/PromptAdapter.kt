@@ -7,8 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
-//class PromptAdapter(private val itemList: List<String>) : RecyclerView.Adapter<PromptAdapter.ViewHolder>()
-
 class PromptAdapter(private val itemList: List<SavedEntry>) : RecyclerView.Adapter<PromptAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View, listener: onItemClickListener) : RecyclerView.ViewHolder(itemView){
         val titleDate: TextView = itemView.findViewById(R.id.date_text)

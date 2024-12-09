@@ -58,8 +58,8 @@ class DailyActivity : AppCompatActivity() {
 
         //val dbHelper : DatabaseHelper = DatabaseHelper(this)
 
-        //val datePst = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
-        val datePst = LocalDate.of(2024, 12, 5)
+        val datePst = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
+        //val datePst = LocalDate.of(2024, 12, 5)
 
         FirebaseFirestore.getInstance().collection("daily_prompts")
             .whereEqualTo("month", datePst.month.value)

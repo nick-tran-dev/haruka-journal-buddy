@@ -49,6 +49,7 @@ class ViewPagerAdapter(
                 if (holder.nameEntry.text.isNotEmpty()){
                     val dbHelper = DatabaseHelper(context)
                     dbHelper.updateSetting("user_name", holder.nameEntry.text.toString())
+                    dbHelper.updateSetting("done_first_time", "1")
                     dbHelper.close()
 
                     val intent = Intent(context, EntryListActivity::class.java)
@@ -84,6 +85,8 @@ class FirstTimeActivity : AppCompatActivity() {
         val newUser : Boolean = dbHelper.selectStrFromDb(
             "setting_by_id", "done_first_time", "value"
         ) == "0"
+
+        println(newUser)
 
         if (newUser)
             firstTimeSetup()
